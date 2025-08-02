@@ -9,7 +9,7 @@ class Habit(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, index=True, nullable=False)
     description = Column(Text, nullable=True)
-    frequency = Column(String, default="daily")
+    activity_type = Column(String, nullable=False)  # "correr", "caminar", "pasos"
     is_public = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     owner_id = Column(Integer, ForeignKey("users.id"))
