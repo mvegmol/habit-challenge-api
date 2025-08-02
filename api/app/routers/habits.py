@@ -28,6 +28,14 @@ def list_user_habits(
     return habit_crud.get_habits_by_user(db, owner_id=current_user.id)
 
 
+@router.get("/me", response_model=List[HabitResponse])
+def get_my_habits(
+    db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)
+):
+    """Obtener todos los hábitos del usuario actual"""
+    return habit_crud.get_habits_by_user(db, owner_id=current_user.id)
+
+
 @router.get("/{habit_id}", response_model=HabitResponse)
 def get_habit_by_id(
     habit_id: int,
