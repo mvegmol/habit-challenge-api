@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_USER: miguel
       POSTGRES_PASSWORD: "123"
-      POSTGRES_DB: habit-challenge
+      POSTGRES_DB: habit
     volumes:
       - postgres-data:/var/lib/postgresql/data
     

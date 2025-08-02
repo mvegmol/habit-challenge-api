@@ -13,5 +13,5 @@ class Habit(Base):
     is_public = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("user", back_populates="habits")
+    owner = relationship("User", back_populates="habits")
     progresses = relationship("Progress", back_populates="habit")

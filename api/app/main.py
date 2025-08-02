@@ -1,11 +1,28 @@
 from fastapi import FastAPI
 from .db import engine, Base
 
-# Importar modelos
-from .models import user, habit, progress
+# Importar modelos ANTES de crear las tablas (necesario para que SQLAlchemy los registre)
+from .models.user import User
+from .models.habit import Habit
+from .models.progress import Progress
 
-app = FastAPI()
+# Importar routers
+from .routers import auth, users
 
-# Crear las tablas si no existen
+app = FastAPI(
+    title="Habit Challenge API",
+    description="API para gestión de hábitos y seguimiento de progreso",
+    version="1.0.0"
+)
 
+# Incluir routers
+app.include_router(auth.router)
+app.include_router(users.router)
+
+# Crear las tablas DESPUÉS de importar todos los modelos
 Base.metadata.create_all(bind=engine)
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Habit Challenge API - Running!"}
