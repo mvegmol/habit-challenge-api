@@ -7,7 +7,7 @@ from .models.habit import Habit
 from .models.progress import Progress
 
 # Importar routers
-from .routers import auth, users, habits
+from .routers import auth, users, habits, progress
 
 app = FastAPI(
     title="Habit Challenge API",
@@ -19,7 +19,7 @@ app = FastAPI(
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(habits.router)
-
+app.include_router(progress.router)
 # Crear las tablas DESPUÉS de importar todos los modelos
 Base.metadata.create_all(bind=engine)
 
