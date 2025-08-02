@@ -105,26 +105,27 @@ Incluye una colección completa para probar todas las funcionalidades:
 
 ```bash
 # Importar en Postman:
-Habit_Challenge_API_Collection.postman_collection.json
+Postman/Habit_Challenge_API_Collection.postman_collection.json
 ```
 
 **Características de la colección:**
-- ✅ **80+ requests** con tests automáticos
-- ✅ **Variables automáticas** (tokens, IDs)
+- ✅ **25+ requests** organizados por funcionalidad
+- ✅ **Tests automáticos** con validaciones completas
+- ✅ **Variables automáticas** (tokens, IDs, fechas)
 - ✅ **Flujo completo** de autenticación a estadísticas
-- ✅ **Casos de error** y validaciones
-- ✅ **Documentación integrada**
+- ✅ **Casos de error** y validaciones de entrada
+- ✅ **Documentación integrada** en cada request
+- ✅ **Collection Runner** para tests automatizados
 
 Ver guía completa: [POSTMAN_GUIDE.md](POSTMAN_GUIDE.md)
 
-### Scripts de Prueba
-```bash
-# Ejecutar suite de pruebas completa
-python test_physical_activities.py
-
-# Pruebas unitarias
-pytest
-```
+### Cobertura de Testing
+- **Autenticación**: Registro, login, perfiles
+- **Hábitos**: CRUD completo para los 3 tipos de actividades
+- **Progreso**: Registro con validación y cálculos automáticos
+- **Estadísticas**: Resúmenes por tipo y período
+- **Validaciones**: Casos de error y manejo de excepciones
+- **Integración**: Flujos completos de usuario
 
 ## 🛠️ Stack Tecnológico
 
