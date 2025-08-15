@@ -7,11 +7,10 @@ import json
 def test_create_progress_running(authorized_client, db, test_user):
     # Crear un hábito de tipo correr
     habit = Habit(
-        name="Running",
+        title="Running",
         description="Daily running",
         activity_type="correr",
-        frequency="diario",
-        goal=5.0,
+        is_public=True,
         owner_id=test_user.id
     )
     db.add(habit)
@@ -22,7 +21,7 @@ def test_create_progress_running(authorized_client, db, test_user):
         "/progress/",
         json={
             "habit_id": habit.id,
-            "date": datetime.now().isoformat(),
+            "date": datetime.now().date().isoformat(),
             "distance_km": 5.0,
             "duration_minutes": 30,
             "city": "Madrid"
@@ -37,11 +36,10 @@ def test_create_progress_running(authorized_client, db, test_user):
 def test_create_progress_steps(authorized_client, db, test_user):
     # Crear un hábito de tipo pasos
     habit = Habit(
-        name="Daily Steps",
+        title="Daily Steps",
         description="Daily steps goal",
         activity_type="pasos",
-        frequency="diario",
-        goal=10000,
+        is_public=True,
         owner_id=test_user.id
     )
     db.add(habit)
@@ -52,7 +50,7 @@ def test_create_progress_steps(authorized_client, db, test_user):
         "/progress/",
         json={
             "habit_id": habit.id,
-            "date": datetime.now().isoformat(),
+            "date": datetime.now().date().isoformat(),
             "steps": 8000
         }
     )
@@ -65,33 +63,34 @@ def test_create_progress_steps(authorized_client, db, test_user):
 def test_get_progress_summary_running(authorized_client, db, test_user):
     # Crear un hábito y algunos registros de progreso
     habit = Habit(
-        name="Running",
+        title="Running",
         description="Daily running",
         activity_type="correr",
-        frequency="diario",
-        goal=5.0,
+        is_public=True,
         owner_id=test_user.id
     )
     db.add(habit)
     db.commit()
     db.refresh(habit)
 
-    # Crear algunos registros de progreso
+    # Crear algunos registros de progreso con valores de pace
     progresses = [
         Progress(
             habit_id=habit.id,
             user_id=test_user.id,
-            date=datetime.now(),
+            date=datetime.now().date(),
             distance_km=5.0,
             duration_minutes=30,
+            pace=6.0,  # 30 minutos / 5 km = 6.0 min/km
             city="Madrid"
         ),
         Progress(
             habit_id=habit.id,
             user_id=test_user.id,
-            date=datetime.now(),
+            date=datetime.now().date(),
             distance_km=6.0,
             duration_minutes=35,
+            pace=5.83,  # 35 minutos / 6 km ≈ 5.83 min/km
             city="Madrid"
         )
     ]
@@ -101,18 +100,17 @@ def test_get_progress_summary_running(authorized_client, db, test_user):
     response = authorized_client.get("/progress/summary/?days=7&activity_type=correr")
     assert response.status_code == 200
     data = response.json()
-    assert "total_distance" in data
-    assert "total_duration" in data
+    assert "total_distance_km" in data
+    assert "total_duration_minutes" in data
     assert "average_pace" in data
 
 def test_get_progress_by_habit(authorized_client, db, test_user):
     # Crear un hábito y algunos registros de progreso
     habit = Habit(
-        name="Running",
+        title="Running",
         description="Daily running",
         activity_type="correr",
-        frequency="diario",
-        goal=5.0,
+        is_public=True,
         owner_id=test_user.id
     )
     db.add(habit)
@@ -122,9 +120,10 @@ def test_get_progress_by_habit(authorized_client, db, test_user):
     progress = Progress(
         habit_id=habit.id,
         user_id=test_user.id,
-        date=datetime.now(),
+        date=datetime.now().date(),
         distance_km=5.0,
         duration_minutes=30,
+        pace=6.0,  # 30 minutos / 5 km = 6.0 min/km
         city="Madrid"
     )
     db.add(progress)
@@ -140,19 +139,17 @@ def test_get_my_progress(authorized_client, db, test_user):
     # Crear múltiples hábitos y progreso
     habits = [
         Habit(
-            name="Running",
+            title="Running",
             description="Daily running",
             activity_type="correr",
-            frequency="diario",
-            goal=5.0,
+            is_public=True,
             owner_id=test_user.id
         ),
         Habit(
-            name="Walking",
+            title="Walking",
             description="Daily walking",
             activity_type="caminar",
-            frequency="diario",
-            goal=3.0,
+            is_public=True,
             owner_id=test_user.id
         )
     ]
@@ -166,17 +163,19 @@ def test_get_my_progress(authorized_client, db, test_user):
         Progress(
             habit_id=habits[0].id,
             user_id=test_user.id,
-            date=datetime.now(),
+            date=datetime.now().date(),
             distance_km=5.0,
             duration_minutes=30,
+            pace=6.0,  # 30 minutos / 5 km = 6.0 min/km
             city="Madrid"
         ),
         Progress(
             habit_id=habits[1].id,
             user_id=test_user.id,
-            date=datetime.now(),
+            date=datetime.now().date(),
             distance_km=3.0,
             duration_minutes=45,
+            pace=15.0,  # 45 minutos / 3 km = 15.0 min/km
             city="Madrid"
         )
     ]

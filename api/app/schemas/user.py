@@ -7,6 +7,7 @@ class UserBase(BaseModel):
     id: int
     created_at: datetime
     full_name: Optional[str] = None
+    username: Optional[str] = None
     email: EmailStr
     hashed_password: str
 
@@ -16,12 +17,14 @@ class UserBase(BaseModel):
 
 class UserCreate(BaseModel):
     full_name: Optional[str] = None
+    username: Optional[str] = None
     email: EmailStr
     password: str
 
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
+    username: Optional[str] = None
     full_name: Optional[str] = None
     password: Optional[str] = None
 
@@ -29,6 +32,7 @@ class UserUpdate(BaseModel):
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
+    username: Optional[str] = None
     full_name: Optional[str] = None
     created_at: datetime
 
