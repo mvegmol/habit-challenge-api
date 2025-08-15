@@ -1,0 +1,424 @@
+{
+  "info": {
+    "name": "Habit Challenge API - Production",
+    "description": "Colección para probar la API de seguimiento de actividades físicas en el ambiente de producción.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Configuración automática de variables",
+          "if (!pm.environment.get('base_url')) {",
+          "    pm.environment.set('base_url', 'https://habit-challenge-api.onrender.com');",
+          "}",
+          "",
+          "// Auto-setup de fecha actual",
+          "pm.environment.set('current_date', new Date().toISOString().split('T')[0]);"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://habit-challenge-api.onrender.com",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "habit_running_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "habit_walking_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "habit_steps_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "current_date",
+      "value": "2025-08-15",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Autenticación",
+      "item": [
+        {
+          "name": "1. Registrar Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"runner@example.com\",\n  \"password\": \"StrongPassword123\",\n  \"full_name\": \"María Runner\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Registra un nuevo usuario en el sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Iniciar Sesión",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"runner@example.com\",\n  \"password\": \"StrongPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Autentica al usuario y obtiene token JWT"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Obtener Perfil Actual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Obtiene información del usuario autenticado"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints para registro, login y gestión de sesiones"
+    },
+    {
+      "name": "🏃‍♂️ Gestión de Hábitos",
+      "item": [
+        {
+          "name": "1. Crear Hábito - Correr",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Running Matutino\",\n  \"description\": \"Sesión de correr todas las mañanas para mantenerme en forma\",\n  \"activity_type\": \"correr\",\n  \"is_public\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habits/",
+              "host": ["{{base_url}}"],
+              "path": ["habits", ""]
+            },
+            "description": "Crea un nuevo hábito para actividad de correr"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Crear Hábito - Caminar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Caminata Vespertina\",\n  \"description\": \"Caminar por el parque después del trabajo\",\n  \"activity_type\": \"caminar\",\n  \"is_public\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habits/",
+              "host": ["{{base_url}}"],
+              "path": ["habits", ""]
+            },
+            "description": "Crea un nuevo hábito para actividad de caminar"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Crear Hábito - Pasos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Meta Diaria de Pasos\",\n  \"description\": \"Caminar 10,000 pasos todos los días\",\n  \"activity_type\": \"pasos\",\n  \"is_public\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habits/",
+              "host": ["{{base_url}}"],
+              "path": ["habits", ""]
+            },
+            "description": "Crea un nuevo hábito para conteo de pasos"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Listar Mis Hábitos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/habits/me",
+              "host": ["{{base_url}}"],
+              "path": ["habits", "me"]
+            },
+            "description": "Obtiene todos los hábitos del usuario actual"
+          },
+          "response": []
+        },
+        {
+          "name": "5. Obtener Hábito por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/habits/{{habit_running_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["habits", "{{habit_running_id}}"]
+            },
+            "description": "Obtiene detalles de un hábito específico"
+          },
+          "response": []
+        }
+      ],
+      "description": "Operaciones CRUD para gestión de hábitos de actividades físicas"
+    },
+    {
+      "name": "📊 Seguimiento de Progreso",
+      "item": [
+        {
+          "name": "1. Registrar Sesión de Running",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habit_id\": {{habit_running_id}},\n  \"date\": \"{{current_date}}\",\n  \"distance_km\": 5.2,\n  \"duration_minutes\": 32,\n  \"city\": \"Madrid\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/progress/",
+              "host": ["{{base_url}}"],
+              "path": ["progress", ""]
+            },
+            "description": "Registra una sesión de running con datos del clima automáticos"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Registrar Caminata",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habit_id\": {{habit_walking_id}},\n  \"date\": \"{{current_date}}\",\n  \"distance_km\": 3.8,\n  \"duration_minutes\": 45,\n  \"city\": \"Barcelona\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/progress/",
+              "host": ["{{base_url}}"],
+              "path": ["progress", ""]
+            },
+            "description": "Registra una sesión de caminata"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Registrar Pasos Diarios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habit_id\": {{habit_steps_id}},\n  \"date\": \"{{current_date}}\",\n  \"steps\": 12500\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/progress/",
+              "host": ["{{base_url}}"],
+              "path": ["progress", ""]
+            },
+            "description": "Registra el conteo de pasos del día"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Ver Mi Progreso",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/progress/me",
+              "host": ["{{base_url}}"],
+              "path": ["progress", "me"]
+            },
+            "description": "Obtiene todo el progreso del usuario"
+          },
+          "response": []
+        },
+        {
+          "name": "5. Progreso por Hábito",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/progress/habit/{{habit_running_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["progress", "habit", "{{habit_running_id}}"]
+            },
+            "description": "Obtiene progreso específico de un hábito"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints para registrar y consultar progreso de actividades físicas"
+    },
+    {
+      "name": "📈 Estadísticas y Resúmenes",
+      "item": [
+        {
+          "name": "1. Resumen Semanal - Correr",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/progress/summary/?days=7&activity_type=correr",
+              "host": ["{{base_url}}"],
+              "path": ["progress", "summary", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7"
+                },
+                {
+                  "key": "activity_type",
+                  "value": "correr"
+                }
+              ]
+            },
+            "description": "Obtiene resumen de actividades de correr en los últimos 7 días"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Resumen Mensual - Caminar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/progress/summary/?days=30&activity_type=caminar",
+              "host": ["{{base_url}}"],
+              "path": ["progress", "summary", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                },
+                {
+                  "key": "activity_type",
+                  "value": "caminar"
+                }
+              ]
+            },
+            "description": "Obtiene resumen de caminatas en los últimos 30 días"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Resumen de Pasos - 2 Semanas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/progress/summary/?days=14&activity_type=pasos",
+              "host": ["{{base_url}}"],
+              "path": ["progress", "summary", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "14"
+                },
+                {
+                  "key": "activity_type",
+                  "value": "pasos"
+                }
+              ]
+            },
+            "description": "Obtiene resumen de pasos en las últimas 2 semanas"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints para obtener estadísticas y resúmenes de actividades"
+    }
+  ]
+}
